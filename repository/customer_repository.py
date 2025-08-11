@@ -1,4 +1,4 @@
-# repositories/customer_repository.py
+# repository/customer_repository.py
 from domain.customer import Customer
 
 

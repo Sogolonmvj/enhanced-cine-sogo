@@ -1,7 +1,7 @@
-# services/ticket_purchase_service.py
+# service/ticket_purchase_service.py
 from domain.product import Product
-from repositories.customer_repository import CustomerRepository
-from repositories.movie_repository import MovieRepository
+from repository.customer_repository import CustomerRepository
+from repository.movie_repository import MovieRepository
 
 
 class TicketPurchaseService:

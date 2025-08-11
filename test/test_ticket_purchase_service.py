@@ -3,9 +3,9 @@ from decimal import Decimal
 from domain.movie import Movie
 from domain.customer import Customer
 from domain.product import Product
-from repositories.movie_repository import MovieRepository
-from repositories.customer_repository import CustomerRepository
-from services.ticket_purchase_service import TicketPurchaseService
+from repository.movie_repository import MovieRepository
+from repository.customer_repository import CustomerRepository
+from service.ticket_purchase_service import TicketPurchaseService
 
 
 @pytest.fixture

@@ -2,12 +2,12 @@
 import logging
 from _pydecimal import Decimal
 
-from repositories.customer_repository import CustomerRepository
-from repositories.movie_repository import MovieRepository
-from services.ticket_purchase_service import TicketPurchaseService
+from repository.customer_repository import CustomerRepository
+from repository.movie_repository import MovieRepository
+from service.ticket_purchase_service import TicketPurchaseService
 from domain.product import Product
-from utils.ticket_writer import TicketWriter
-from utils.logger import setup_logger
+from util.ticket_writer import TicketWriter
+from util.logger import setup_logger
 
 
 def main():

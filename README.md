@@ -61,7 +61,7 @@ Siga as instruções no terminal para:
 
 ```bash
 pip install -r requirements.txt
-cd tests
+cd test
 pytest
 ```
 

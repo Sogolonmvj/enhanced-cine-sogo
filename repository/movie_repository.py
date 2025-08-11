@@ -1,4 +1,4 @@
-# repositories/movie_repository.py
+# repository/movie_repository.py
 from _pydecimal import Decimal
 
 from domain.movie import Movie
