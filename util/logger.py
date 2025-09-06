@@ -8,7 +8,7 @@ log_format = "%(asctime)s - %(levelname)s - %(message)s"
 filemode = "a"
 
 
-def setup_logger():
+def setup_logger() -> None:
     os.makedirs(log_dir, exist_ok=True)
     logging.basicConfig(
         filename=log_file,

@@ -4,11 +4,11 @@ from datetime import datetime
 
 
 class TicketWriter:
-    def __init__(self, directory: str = "tickets"):
+    def __init__(self, directory: str = "tickets") -> None:
         self.directory = directory
         os.makedirs(self.directory, exist_ok=True)
 
-    def write_to_file(self, customer_name: str, ticket_info: dict):
+    def write_to_file(self, customer_name: str, ticket_info: dict) -> str:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{self.directory}/ticket_{customer_name}_{timestamp}.txt"
         with open(filename, "w") as file:

@@ -10,7 +10,7 @@ from util.ticket_writer import TicketWriter
 from util.logger import setup_logger
 
 
-def main():
+def main() -> None:
     setup_logger()
     logger = logging.getLogger(__name__)
 

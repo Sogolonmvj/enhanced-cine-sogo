@@ -1,13 +1,13 @@
 import sqlite3
-from typing import List, Tuple, Any
+from typing import Any, List
 
 
 class SQLiteDatabase:
 
-    def __init__(self, db_name: str):
+    def __init__(self, db_name: str) -> None:
         self.db_name = db_name
 
-    def execute(self, query: str, params: tuple[Any, ...] = (), fetch: str = None) -> list[tuple[Any, ...]]:
+    def execute(self, query: str, params: tuple[Any, ...] = (), fetch: str = None) -> None | list[Any] | int | Any:
         """Execute an SQL query and return results if applicable."""
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
@@ -18,7 +18,7 @@ class SQLiteDatabase:
             return cursor.fetchone() if cursor.description else None
         elif fetch == "all":
             return cursor.fetchall() if cursor.description else []
-        return []
+        return cursor.rowcount
 
     def create_table(self, table_name: str, column_names: list[str]) -> list[tuple[Any, ...]]:
         """Create a table with the specified columns."""
@@ -32,7 +32,8 @@ class SQLiteDatabase:
         query = f"INSERT INTO {table_name} ({', '.join(column_names)}) VALUES ({placeholders})"
         return self.execute(query, values)
 
-    def update(self, table_name: str, column_names: list[str], column_name: str, values: tuple[Any, ...]) -> list[tuple[Any, ...]]:
+    def update(self, table_name: str,
+               column_names: list[str], column_name: str, values: tuple[Any, ...]) -> list[tuple[Any, ...]]:
         """Update rows in the specified table."""
         columns_definition = "=?, ".join(column_names).join(["", "=?"])
         placeholder = "?"
@@ -45,4 +46,12 @@ class SQLiteDatabase:
         query = f"DELETE FROM {table_name} WHERE {column_name}={placeholder}"
         return self.execute(query, value)
 
-    #TODO: Verify values being passed as tuples
+    def select(self, column_names: list,
+               table_name: str, column_name: str, value: tuple[Any, ...], fetch: str) -> list[tuple[Any, ...]]:
+        """Select rows from the specified table."""
+        columns = ", ".join(column_names)
+        placeholder = "?"
+        query = f"SELECT {columns} FROM {table_name} WHERE {column_name}={placeholder}"
+        return self.execute(query, value, fetch)
+
+    # TODO: Verify values being passed as tuples
