@@ -5,16 +5,27 @@ from repository.movie_repository import MovieRepository
 
 
 class TicketPurchaseService:
-    def __init__(self, movie_repository: MovieRepository, customer_repository: CustomerRepository, products: [Product]):
+    def __init__(self,
+                 movie_repository: MovieRepository,
+                 customer_repository: CustomerRepository,
+                 products: [Product]) -> None:
         self.movie_repository = movie_repository
         self.customer_repository = customer_repository
         self.products = products
 
-    def purchase_ticket(self, customer_id: str, room_number: int, quantity: int, selected_product_names: list):
-        if customer_id not in self.customer_repository.customers:
-            raise ValueError("Cliente inexistente!")
+    def purchase_ticket(self,
+                        customer_id: str,
+                        room_number: int,
+                        quantity: int,
+                        selected_product_names: list) -> dict:
+        try:
+            customer = self.customer_repository.get_account(customer_id)
+            if customer.get_document() is None:
+                raise ValueError("Cliente inexistente!")
+        except Exception as e:
+            raise ValueError("Erro ao buscar cliente: " + str(e))
 
-        movie = self.movie_repository.get_movie_by_room(room_number)
+        movie = self.movie_repository.get_movie_by_room(room_number)  ## alterar para consultar banco de dados
         movie.book_seats(quantity)
 
         selected_products = []
@@ -35,5 +46,9 @@ class TicketPurchaseService:
             "total_price": total_price
         }
 
-    def __get_customer_name_by_id(self, customer_id: str):
-        return self.customer_repository.get_account(customer_id).get_name()
+    def __get_customer_name_by_id(self, customer_id: str) -> str:
+        try:
+            name = self.customer_repository.get_account(customer_id).get_name()
+            return name
+        except Exception as e:
+            raise ValueError("Erro ao buscar cliente: " + str(e))
