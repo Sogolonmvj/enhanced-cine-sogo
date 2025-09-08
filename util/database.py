@@ -51,7 +51,10 @@ class SQLiteDatabase:
         """Select rows from the specified table."""
         columns = ", ".join(column_names)
         placeholder = "?"
-        query = f"SELECT {columns} FROM {table_name} WHERE {column_name}={placeholder}"
+        query = f"SELECT {columns} FROM {table_name}"
+        where_clause = f" WHERE {column_name}={placeholder}" if column_name and value else ""
+        query += where_clause
+        fetch = "all" if not column_name or not value else fetch
         return self.execute(query, value, fetch)
 
     # TODO: Verify values being passed as tuples

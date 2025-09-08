@@ -1,6 +1,6 @@
 # repository/customer_repository.py
 from domain.customer import Customer
-from utils.database import database
+from util.database import database
 
 
 class CustomerRepository:
