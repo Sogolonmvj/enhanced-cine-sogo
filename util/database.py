@@ -1,5 +1,5 @@
 import sqlite3
-from typing import Any, List
+from typing import Any
 
 
 class SQLiteDatabase:

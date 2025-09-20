@@ -42,20 +42,22 @@ class MovieRepository:
                 "movies", "room_number", (room_number,), "one")[0]
             if room is None:
                 raise ValueError("Sala inexistente!")
-            movie = Movie(title, room, capacity, Decimal(str(price)))
+            movie = Movie(title, room, Decimal(str(price)))
             movie.booked_seats = booked_seats if booked_seats is not None else 0
             return movie
         except Exception as e:
             raise f"Erro ao buscar sala: {e}"
 
-    def book_tickets(self, room_number: int, quantity: int) -> None:
+    def book_tickets(self, room_number: int, quantity: int) -> None:  # add validation to check if there are enough seats
         try:
             if quantity <= 0:
                 raise ValueError("Quantidade inválida de ingressos!")
-            booked_seats = self.database.select(
-                ["booked_seats"], "movies", "room_number", (room_number,), "one")[0]
+            booked_seats, capacity = self.database.select(
+                ["booked_seats", "capacity"], "movies", "room_number", (room_number,), "one")[0]
             if booked_seats is None or booked_seats < 0:
                 raise ValueError("Sala inexistente!")
+            if booked_seats == capacity:
+                raise ValueError("Sala lotada!")
             booked_seats = booked_seats + quantity
             self.database.update(
                 "movies", "booked_seats", "room_number", (booked_seats, room_number))
