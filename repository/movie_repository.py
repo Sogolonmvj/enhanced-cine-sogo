@@ -48,7 +48,7 @@ class MovieRepository:
         except Exception as e:
             raise f"Erro ao buscar sala: {e}"
 
-    def book_tickets(self, room_number: int, quantity: int) -> None:  # add validation to check if there are enough seats
+    def book_tickets(self, room_number: int, quantity: int) -> None:
         try:
             if quantity <= 0:
                 raise ValueError("Quantidade inválida de ingressos!")
