@@ -30,7 +30,7 @@ def main() -> None:
     while True:
         print("\n--- Cine Sogo ---")
         print("CC. Criar conta")
-        if len(customer_repo.customers.values()) > 0:
+        if customer_repo.has_any_account():
             print("AC. Alterar conta")
             print("DC. Deletar conta")
         print("MF. Mostrar filmes disponíveis")
@@ -62,7 +62,9 @@ def main() -> None:
                 movies = movie_repo.list_movies()
                 print("\nFilmes disponíveis:")
                 for movie in movies:
-                    print(f"Sala {movie.get_room_number()}: {movie.get_title()} ({movie.available_seats()} vagas disponíveis) "
+                    capacity, booked_seats = movie_repo.get_capacity_by_room(movie.get_room_number())
+                    available_seats = capacity - booked_seats
+                    print(f"Sala {movie.get_room_number()}: {movie.get_title()} ({available_seats} vagas disponíveis) "
                           f" - Preço: R${movie.get_price():.2f} (unidade)")
             elif choice.upper() == "RE":
                 taxpayer_id = input("Digite o seu CPF: ")
@@ -76,12 +78,13 @@ def main() -> None:
                 taxpayer_id = input("Digite o seu CPF: ")
                 customer = customer_repo.get_account(taxpayer_id)
                 # Only show booked movies
-                booked_movies = [movie for movie in movie_repo.list_movies() if movie.get_booked_seats() > 0]
+                booked_movies = [movie for movie in movie_repo.list_movies() if movie_repo.has_ticket_booked(movie.get_room_number())]
                 if not booked_movies:
                     raise ValueError("Nenhum filme reservado. Por favor, reserve um filme primeiro.")
                 print("\nFilmes disponíveis para compra:")
                 for movie in booked_movies:
-                    print(f"Sala {movie.get_room_number()}: {movie.get_title()} ({movie.get_booked_seats()} vagas "
+                    capacity, booked_seats = movie_repo.get_capacity_by_room(movie.get_room_number())
+                    print(f"Sala {movie.get_room_number()}: {movie.get_title()} ({booked_seats} vagas "
                           f"reservadas)"
                           f" - Preço: R${movie.get_price():.2f} (unidade)")
                 room_number = int(input("Digite o número da sala: "))
@@ -90,7 +93,8 @@ def main() -> None:
                 quantity = int(input("Digite a quantidade de entradas: "))
                 for movie in booked_movies:
                     if movie.get_room_number() == room_number:
-                        if quantity > movie.get_booked_seats():
+                        capacity, booked_seats = movie_repo.get_capacity_by_room(room_number)
+                        if quantity > booked_seats:
                             raise ValueError("A quantidade informada para compra é maior que a quantidade reservada!")
                         break
                 need_products = input("Gostaria de solicitar algum produto? (Sim/Não): ")

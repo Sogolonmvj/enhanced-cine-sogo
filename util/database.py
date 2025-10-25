@@ -47,7 +47,10 @@ class SQLiteDatabase:
         return self.execute(query, value)
 
     def select(self, column_names: list,
-               table_name: str, column_name: str, value: tuple[Any, ...], fetch: str) -> list[tuple[Any, ...]]:
+               table_name: str,
+               column_name: str = None,
+               value: tuple[Any, ...] = None,
+               fetch: str = "all") -> list[tuple[Any, ...]]:
         """Select rows from the specified table."""
         columns = ", ".join(column_names)
         placeholder = "?"
@@ -56,5 +59,11 @@ class SQLiteDatabase:
         query += where_clause
         fetch = "all" if not column_name or not value else fetch
         return self.execute(query, value, fetch)
+
+    def count(self, table_name: str) -> int:
+        """Count rows in the specified table."""
+        query = f"SELECT COUNT(*) FROM {table_name}"
+        result = self.execute(query, fetch="one")
+        return result[0] if result else 0
 
     # TODO: Verify values being passed as tuples
